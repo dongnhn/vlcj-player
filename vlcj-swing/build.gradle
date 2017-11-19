@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+description = "vlcj-player"
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'uk.co.caprica.vlcjplayer.VlcjPlayer'
+	}
+}
+
+sourceCompatibility = rootProject.ext.javaVersion
+targetCompatibility = rootProject.ext.javaVersion
+
+repositories {
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    compile 'com.google.guava:guava:18.0'
+    compile 'com.miglayout:miglayout-swing:5.0'
+    compile 'net.java.dev.glazedlists:glazedlists_java15:1.9.0'
+    compile 'org.slf4j:slf4j-log4j12:1.7.10'
+    compile 'uk.co.caprica:vlcj:3.10.1'
+}

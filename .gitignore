@@ -1,4 +1,9 @@
-/target/
+**/target/
 /junk/
 /stderr.log
 /stdout.log
+.gradle
+bin/
+.settings/
+**/.project
+**/.classpath

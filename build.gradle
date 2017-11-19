@@ -1,0 +1,13 @@
+allprojects {
+    repositories {
+        jcenter() 
+    }
+}
+
+subprojects {
+    version = '1.0'
+}
+
+ext {
+	javaVersion = 1.6
+}
