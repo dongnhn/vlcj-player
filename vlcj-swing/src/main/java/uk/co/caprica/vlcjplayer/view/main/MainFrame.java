@@ -54,6 +54,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
@@ -73,6 +74,8 @@ import uk.co.caprica.vlcjplayer.view.action.mediaplayer.MediaPlayerActions;
 import uk.co.caprica.vlcjplayer.view.snapshot.SnapshotView;
 
 import com.google.common.eventbus.Subscribe;
+
+import dong.listeningtrainer.ListeningTrainerDialog;
 
 @SuppressWarnings("serial")
 public final class MainFrame extends BaseFrame {
@@ -95,6 +98,7 @@ public final class MainFrame extends BaseFrame {
 
     private final Action toolsEffectsAction;
     private final Action toolsMessagesAction;
+    private final Action toolsListeningAction;
     private final Action toolsDebugAction;
 
     private final StandardAction viewStatusBarAction;
@@ -144,6 +148,10 @@ public final class MainFrame extends BaseFrame {
     private final JPanel bottomPane;
 
     private final MouseMovementDetector mouseMovementDetector;
+    
+    private JMenuItem listeningTrainerMenuItem;
+	
+	private File previousOpenedFile;
 
     public MainFrame() {
         super("vlcj player");
@@ -219,6 +227,27 @@ public final class MainFrame extends BaseFrame {
             }
         };
 
+        toolsListeningAction = new StandardAction(resource("menu.tools.item.trainer")) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				if (previousOpenedFile != null && previousOpenedFile.exists()) {
+					if (previousOpenedFile.isDirectory()) {
+						fileChooser.setCurrentDirectory(previousOpenedFile);
+					} else {
+						fileChooser.setCurrentDirectory(previousOpenedFile.getParentFile());
+					}
+				}
+				fileChooser.setDialogTitle("Open a subtitle file");
+				if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(MainFrame.this)) {
+					File file = fileChooser.getSelectedFile();
+                    ListeningTrainerDialog dialog = new ListeningTrainerDialog(MainFrame.this, file);
+                    dialog.setLocationRelativeTo(MainFrame.this);
+                    dialog.setVisible(true);
+                }
+			}
+		};
+        
         toolsDebugAction = new StandardAction(resource("menu.tools.item.debug")) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -366,6 +395,11 @@ public final class MainFrame extends BaseFrame {
         toolsMenu.setMnemonic(resource("menu.tools").mnemonic());
         toolsMenu.add(new JMenuItem(toolsEffectsAction));
         toolsMenu.add(new JMenuItem(toolsMessagesAction));
+        
+        listeningTrainerMenuItem = new JMenuItem(toolsListeningAction);
+        listeningTrainerMenuItem.setEnabled(false);
+		toolsMenu.add(listeningTrainerMenuItem);
+        
         toolsMenu.add(new JSeparator());
         toolsMenu.add(new JMenuItem(toolsDebugAction));
         menuBar.add(toolsMenu);
@@ -418,6 +452,11 @@ public final class MainFrame extends BaseFrame {
 
         mediaPlayerComponent.getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 
+        	@Override
+        	public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+        		listeningTrainerMenuItem.setEnabled(true);
+        	}
+        	
             @Override
             public void playing(MediaPlayer mediaPlayer) {
                 videoContentPane.showVideo();

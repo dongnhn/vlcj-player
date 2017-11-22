@@ -24,9 +24,9 @@ import java.awt.event.ActionEvent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcjplayer.view.action.Resource;
 
-final class PlayAction extends MediaPlayerAction {
+final public class PlayAction extends MediaPlayerAction {
 
-    PlayAction(Resource resource, MediaPlayer mediaPlayer) {
+    public PlayAction(Resource resource, MediaPlayer mediaPlayer) {
         super(resource, mediaPlayer);
     }
 
