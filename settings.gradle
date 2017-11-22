@@ -1,3 +1,4 @@
 rootProject.name = 'vlcj-player'
 include 'vlcj-common'
 include 'vlcj-swing'
+include 'vlcj-swt'
