@@ -75,6 +75,10 @@ public class VlcjPlayer {
     public static void main(String[] args) throws InterruptedException {
         // This will locate LibVLC for the vast majority of cases
         new NativeDiscovery().discover();
+        
+        if (RuntimeUtil.isMac()) {
+        	System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
+        }
 
         setLookAndFeel();
 
