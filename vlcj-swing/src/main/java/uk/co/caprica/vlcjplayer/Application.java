@@ -19,47 +19,25 @@
 
 package uk.co.caprica.vlcjplayer;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.awt.Component;
 
 import javax.swing.SwingUtilities;
 
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcj.version.Version;
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
+import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.component.DirectMediaPlayerJComponent;
 import uk.co.caprica.vlcjplayer.component.EmbeddedMediaPlayerJComponent;
-import uk.co.caprica.vlcjplayer.event.TickEvent;
 import uk.co.caprica.vlcjplayer.view.action.mediaplayer.MediaPlayerActions;
-
-import com.google.common.eventbus.EventBus;
 
 /**
  * Global application state.
  */
-public final class Application {
+public final class Application extends BaseApplication<Component> {
 
-    private static final String RESOURCE_BUNDLE_BASE_NAME = "strings/vlcj-player";
-
-    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_BASE_NAME);
-
-    private static final int MAX_RECENT_MEDIA_SIZE = 10;
-
-    private final EventBus eventBus;
-
-    private final AbstractMediaPlayerJComponent mediaPlayerComponent;
+    private final AbstractMediaPlayerComponent<Component> mediaPlayerComponent;
 
     private final MediaPlayerActions mediaPlayerActions;
-
-    private final ScheduledExecutorService tickService = Executors.newSingleThreadScheduledExecutor();
-
-    private final Deque<String> recentMedia = new ArrayDeque<String>(MAX_RECENT_MEDIA_SIZE);
 
     private static final class ApplicationHolder {
         private static final Application INSTANCE = new Application();
@@ -69,12 +47,8 @@ public final class Application {
         return ApplicationHolder.INSTANCE;
     }
 
-    public static ResourceBundle resources() {
-        return resourceBundle;
-    }
-
     private Application() {
-        eventBus = new EventBus();
+    	super();
         if (RuntimeUtil.isMac() && new Version(System.getProperty("java.version")).atLeast(new Version("1.7.0"))) {
         	mediaPlayerComponent = new DirectMediaPlayerJComponent();
         } else {
@@ -86,18 +60,9 @@ public final class Application {
         	};
         }
         mediaPlayerActions = new MediaPlayerActions(mediaPlayerComponent.getMediaPlayer());
-        tickService.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                eventBus.post(TickEvent.INSTANCE);
-            }
-        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
-    public void subscribe(Object subscriber) {
-        eventBus.register(subscriber);
-    }
-
+    @Override
     public void post(final Object event) {
         // Events are always posted and processed on the Swing Event Dispatch thread
         if (SwingUtilities.isEventDispatchThread()) {
@@ -113,28 +78,12 @@ public final class Application {
         }
     }
 
-    public AbstractMediaPlayerJComponent mediaPlayerComponent() {
+    @Override
+    public AbstractMediaPlayerComponent<Component> mediaPlayerComponent() {
         return mediaPlayerComponent;
     }
 
     public MediaPlayerActions mediaPlayerActions() {
         return mediaPlayerActions;
-    }
-
-    public void addRecentMedia(String mrl) {
-        if (!recentMedia.contains(mrl)) {
-            recentMedia.addFirst(mrl);
-            while (recentMedia.size() > MAX_RECENT_MEDIA_SIZE) {
-                recentMedia.pollLast();
-            }
-        }
-    }
-
-    public List<String> recentMedia() {
-        return new ArrayList<String>(recentMedia);
-    }
-
-    public void clearRecentMedia() {
-        recentMedia.clear();
     }
 }

@@ -34,7 +34,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcj.runtime.streams.NativeStreams;
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
+import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 import uk.co.caprica.vlcjplayer.view.debug.DebugFrame;
 import uk.co.caprica.vlcjplayer.view.effects.EffectsFrame;
@@ -103,7 +103,7 @@ public class VlcjPlayer {
     }
 
     public VlcjPlayer() {
-        final AbstractMediaPlayerJComponent mediaPlayerComponent = application().mediaPlayerComponent();
+        final AbstractMediaPlayerComponent mediaPlayerComponent = application().mediaPlayerComponent();
 
         mainFrame = new MainFrame();
         mainFrame.addWindowListener(new WindowAdapter() {

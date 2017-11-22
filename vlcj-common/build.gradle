@@ -1,0 +1,14 @@
+apply plugin: 'java-library'
+
+sourceCompatibility = rootProject.ext.javaVersion
+targetCompatibility = rootProject.ext.javaVersion
+
+repositories {
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    compile 'uk.co.caprica:vlcj:3.10.1'
+    compile 'com.google.guava:guava:18.0'
+}
+

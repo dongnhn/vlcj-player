@@ -22,6 +22,7 @@ package uk.co.caprica.vlcjplayer.view.debug;
 import static uk.co.caprica.vlcjplayer.Application.application;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
@@ -42,7 +43,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
+import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.event.ShowDebugEvent;
 import uk.co.caprica.vlcjplayer.view.BaseFrame;
 import ca.odell.glazedlists.BasicEventList;
@@ -55,7 +56,7 @@ import com.google.common.eventbus.Subscribe;
 @SuppressWarnings("serial")
 public final class DebugFrame extends BaseFrame {
 
-    private final AbstractMediaPlayerJComponent mediaPlayerComponent;
+    private final AbstractMediaPlayerComponent<Component> mediaPlayerComponent;
 
     private final EventList<DebugMessage> eventList;
 

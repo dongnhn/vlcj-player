@@ -4,7 +4,7 @@ import java.awt.Component;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 
-public class EmbeddedMediaPlayerJComponent extends EmbeddedMediaPlayerComponent implements AbstractMediaPlayerJComponent {
+public class EmbeddedMediaPlayerJComponent extends EmbeddedMediaPlayerComponent implements AbstractMediaPlayerComponent<Component> {
 
 	@Override
 	public void toggleFullScreen() {
