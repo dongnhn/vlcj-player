@@ -27,6 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -151,9 +152,7 @@ public final class MainFrame extends BaseFrame {
     
     private JMenuItem listeningTrainerMenuItem;
 	
-	private File previousOpenedFile;
-
-    public MainFrame() {
+	public MainFrame() {
         super("vlcj player");
 
         this.mediaPlayerComponent = application().mediaPlayerComponent();
@@ -231,11 +230,12 @@ public final class MainFrame extends BaseFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
-				if (previousOpenedFile != null && previousOpenedFile.exists()) {
-					if (previousOpenedFile.isDirectory()) {
-						fileChooser.setCurrentDirectory(previousOpenedFile);
+				File currentPlayingFile = new File(URI.create(mediaPlayerComponent.getMediaPlayer().mrl()));
+				if (currentPlayingFile.exists()) {
+					if (currentPlayingFile.isDirectory()) {
+						fileChooser.setCurrentDirectory(currentPlayingFile);
 					} else {
-						fileChooser.setCurrentDirectory(previousOpenedFile.getParentFile());
+						fileChooser.setCurrentDirectory(currentPlayingFile.getParentFile());
 					}
 				}
 				fileChooser.setDialogTitle("Open a subtitle file");
