@@ -211,6 +211,31 @@ public class MainShell {
 		new AudioTrackMenuItem(audioMenu);
 		
 		new AudioDeviceMenuItem(audioMenu);
+		
+		new MenuItem(audioMenu, SWT.SEPARATOR);
+		
+		new StandardMenuItem(audioMenu, "menu.audio.item.increaseVolume") {
+			@Override
+			public void handleEvent(Event event) {
+				MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
+				mediaPlayer.setVolume(mediaPlayer.getVolume() + 10);
+			}
+		};
+		
+		new StandardMenuItem(audioMenu, "menu.audio.item.decreaseVolume") {
+			@Override
+			public void handleEvent(Event event) {
+				MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
+				mediaPlayer.setVolume(mediaPlayer.getVolume() - 10);
+			}
+		};
+		
+		new StandardMenuItem(audioMenu, "menu.audio.item.mute") {
+			@Override
+			public void handleEvent(Event event) {
+				application().mediaPlayerComponent().getMediaPlayer().mute();
+			}
+		};
 	}
 
 	public Shell getShell() {
