@@ -11,7 +11,6 @@ import java.util.prefs.Preferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -21,11 +20,16 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.eventbus.Subscribe;
 
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcjplayer.event.PlayingEvent;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
+import uk.co.caprica.vlcjplayer.event.StoppedEvent;
 import uk.co.caprica.vlcjplayer.swt.view.StandardMenuItem;
 
 public class MainShell {
 	private Shell shell;
+	private VideoContentComposite videoContentComposite;
 
 	public MainShell(Display display) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
@@ -36,13 +40,42 @@ public class MainShell {
 		layout.marginHeight = 0;
 		shell.setLayout(layout);
 		
-		Composite videoSurface = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-        videoSurface.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-        videoSurface.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-        
-        application().mediaPlayerComponent().init(videoSurface);
+		videoContentComposite = new VideoContentComposite(shell);
+		videoContentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		videoContentComposite.showDefault();
+		
+		handlePlayerEvents();
         application().subscribe(this);
         restorePreferences();
+	}
+
+	private void handlePlayerEvents() {
+		application().mediaPlayerComponent().getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+			@Override
+			public void playing(MediaPlayer mediaPlayer) {
+				videoContentComposite.showVideo();
+                application().post(PlayingEvent.INSTANCE);
+			}
+			
+			@Override
+			public void stopped(MediaPlayer mediaPlayer) {
+				videoContentComposite.showDefault();
+                application().post(StoppedEvent.INSTANCE);
+			}
+			
+			@Override
+			public void finished(MediaPlayer mediaPlayer) {
+				videoContentComposite.showDefault();
+                application().post(StoppedEvent.INSTANCE);
+			}
+			
+			@Override
+			public void error(MediaPlayer mediaPlayer) {
+				videoContentComposite.showDefault();
+                application().post(StoppedEvent.INSTANCE);
+                // TODO: show error
+			}
+		});
 	}
 
 	private Menu createMenuBar(final Shell shell) {

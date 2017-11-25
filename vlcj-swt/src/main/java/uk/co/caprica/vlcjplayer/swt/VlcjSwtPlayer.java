@@ -32,7 +32,6 @@ public class VlcjSwtPlayer {
 		Listener closeListener = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				System.out.println("app closed");
 				application().post(ShutdownEvent.INSTANCE);
 			}
 		};
