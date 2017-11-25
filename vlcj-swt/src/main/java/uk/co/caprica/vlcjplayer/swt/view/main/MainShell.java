@@ -135,6 +135,10 @@ public class MainShell {
 		new TitleTrackMenuItem(playbackMenu);
 		
 		new ChapterMenuItem(playbackMenu);
+		
+		new MenuItem(playbackMenu, SWT.SEPARATOR);
+
+		new SpeedMenuItem(playbackMenu);
 	}
 
 	public Shell getShell() {
