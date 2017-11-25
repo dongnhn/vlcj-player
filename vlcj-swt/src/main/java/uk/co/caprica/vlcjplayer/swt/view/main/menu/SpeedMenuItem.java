@@ -1,4 +1,4 @@
-package uk.co.caprica.vlcjplayer.swt.view.main;
+package uk.co.caprica.vlcjplayer.swt.view.main.menu;
 
 import java.util.Arrays;
 import java.util.List;

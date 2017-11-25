@@ -1,4 +1,4 @@
-package uk.co.caprica.vlcjplayer.swt.view.main;
+package uk.co.caprica.vlcjplayer.swt.view.main.menu;
 
 import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
 
