@@ -88,6 +88,14 @@ public class MainShell {
 	private Menu createMenuBar(final Shell shell) {
 		Menu menuBar = new Menu(shell, SWT.BAR);
 
+		createMediaMenu(shell, menuBar);
+		
+		createPlaybackMenu(shell, menuBar);
+		
+		return menuBar;
+	}
+
+	private void createMediaMenu(final Shell shell, Menu menuBar) {
 		MenuItem mediaItem = new MenuItem(menuBar, SWT.CASCADE);
 		mediaItem.setText(resource("menu.media").name());
 		final Menu mediaMenu = new Menu(mediaItem);
@@ -116,10 +124,17 @@ public class MainShell {
 				shell.close();
 			}
 		};
-		
-		return menuBar;
 	}
 	
+	private void createPlaybackMenu(Shell shell, Menu menuBar) {
+		MenuItem playbackItem = new MenuItem(menuBar, SWT.CASCADE);
+		playbackItem.setText(resource("menu.playback").name());
+		final Menu playbackMenu = new Menu(playbackItem);
+		playbackItem.setMenu(playbackMenu);
+		
+		new TitleTrackMenuItem(playbackMenu);
+	}
+
 	public Shell getShell() {
 		return this.shell;
 	}
