@@ -49,8 +49,11 @@ public class MainShell {
 		
 		bottomPane.setLayout(new MigLayout("fill, insets 0 n n n", "[grow]", "[]0[]"));
 		
+		Seekbar seekbar = new Seekbar(bottomPane);
+		seekbar.setLayoutData("grow, wrap");
+		
 		ControlButtonsComposite controlButtonsComposite = new ControlButtonsComposite(bottomPane);
-		controlButtonsComposite.setLayoutData("grow, wrap");
+		controlButtonsComposite.setLayoutData("grow");
 		
 		handlePlayerEvents();
         application().subscribe(this);

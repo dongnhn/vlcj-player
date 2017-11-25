@@ -59,7 +59,7 @@ public abstract class BaseApplication<T> {
 		tickService.scheduleWithFixedDelay(new Runnable() {
 			@Override
 			public void run() {
-				eventBus.post(TickEvent.INSTANCE);
+				post(TickEvent.INSTANCE);
 			}
 		}, 0, 1000, TimeUnit.MILLISECONDS);
 	}
