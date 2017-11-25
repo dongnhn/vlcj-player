@@ -159,6 +159,22 @@ public class MainShell {
 				application().mediaPlayerComponent().getMediaPlayer().skip(-10000);
 			}
 		};
+
+		new MenuItem(playbackMenu, SWT.SEPARATOR);
+		
+		new StandardMenuItem(playbackMenu, "menu.playback.item.previousChapter") {
+			@Override
+			public void handleEvent(Event event) {
+				application().mediaPlayerComponent().getMediaPlayer().previousChapter();
+			}
+		};
+		
+		new StandardMenuItem(playbackMenu, "menu.playback.item.nextChapter") {
+			@Override
+			public void handleEvent(Event event) {
+				application().mediaPlayerComponent().getMediaPlayer().nextChapter();
+			}
+		};
 	}
 
 	public Shell getShell() {
