@@ -18,7 +18,7 @@ public abstract class OptionListMenuItem<T> extends StandardMenuItem {
 			public void menuShown(MenuEvent e) {
 				MenuItem self = item();
 				
-				if (dynamicGenerate) {
+				if (!dynamicGenerate) {
 					if (self.getMenu() == null) {
 						generateOptionItems();
 					}
