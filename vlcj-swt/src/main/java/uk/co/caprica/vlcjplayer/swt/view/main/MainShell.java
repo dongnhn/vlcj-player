@@ -11,6 +11,7 @@ import java.util.prefs.Preferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -20,11 +21,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.eventbus.Subscribe;
 
+import net.miginfocom.swt.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcjplayer.event.PlayingEvent;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
-import uk.co.caprica.vlcjplayer.event.StoppedEvent;
 import uk.co.caprica.vlcjplayer.swt.view.StandardMenuItem;
 
 public class MainShell {
@@ -44,6 +44,14 @@ public class MainShell {
 		videoContentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		videoContentComposite.showDefault();
 		
+		Composite bottomPane = new Composite(shell, SWT.NONE);
+		bottomPane.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
+		
+		bottomPane.setLayout(new MigLayout("fill, insets 0 n n n", "[grow]", "[]0[]"));
+		
+		ControlButtonsComposite controlButtonsComposite = new ControlButtonsComposite(bottomPane);
+		controlButtonsComposite.setLayoutData("grow, wrap");
+		
 		handlePlayerEvents();
         application().subscribe(this);
         restorePreferences();
@@ -54,25 +62,21 @@ public class MainShell {
 			@Override
 			public void playing(MediaPlayer mediaPlayer) {
 				videoContentComposite.showVideo();
-                application().post(PlayingEvent.INSTANCE);
 			}
 			
 			@Override
 			public void stopped(MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
-                application().post(StoppedEvent.INSTANCE);
 			}
 			
 			@Override
 			public void finished(MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
-                application().post(StoppedEvent.INSTANCE);
 			}
 			
 			@Override
 			public void error(MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
-                application().post(StoppedEvent.INSTANCE);
                 // TODO: show error
 			}
 		});
