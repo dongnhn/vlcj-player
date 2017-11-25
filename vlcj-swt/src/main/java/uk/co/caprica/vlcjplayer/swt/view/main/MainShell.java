@@ -26,6 +26,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 import uk.co.caprica.vlcjplayer.swt.view.StandardMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.AudioDeviceMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.AudioTrackMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.ChapterMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.RecentMediaMenuItem;
@@ -208,6 +209,8 @@ public class MainShell {
 		audioItem.setMenu(audioMenu);
 		
 		new AudioTrackMenuItem(audioMenu);
+		
+		new AudioDeviceMenuItem(audioMenu);
 	}
 
 	public Shell getShell() {
