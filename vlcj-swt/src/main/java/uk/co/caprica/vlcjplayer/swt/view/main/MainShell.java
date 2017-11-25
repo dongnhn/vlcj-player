@@ -133,6 +133,8 @@ public class MainShell {
 		playbackItem.setMenu(playbackMenu);
 		
 		new TitleTrackMenuItem(playbackMenu);
+		
+		new ChapterMenuItem(playbackMenu);
 	}
 
 	public Shell getShell() {
