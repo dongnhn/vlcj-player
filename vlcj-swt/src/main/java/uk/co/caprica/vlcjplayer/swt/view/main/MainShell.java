@@ -26,6 +26,10 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 import uk.co.caprica.vlcjplayer.swt.view.StandardMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.ChapterMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.RecentMediaMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.SpeedMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.TitleTrackMenuItem;
 
 public class MainShell {
 	private Shell shell;
@@ -139,6 +143,22 @@ public class MainShell {
 		new MenuItem(playbackMenu, SWT.SEPARATOR);
 
 		new SpeedMenuItem(playbackMenu);
+
+		new MenuItem(playbackMenu, SWT.SEPARATOR);
+		
+		new StandardMenuItem(playbackMenu, "menu.playback.item.skipForward") {
+			@Override
+			public void handleEvent(Event event) {
+				application().mediaPlayerComponent().getMediaPlayer().skip(10000);
+			}
+		};
+		
+		new StandardMenuItem(playbackMenu, "menu.playback.item.skipBackward") {
+			@Override
+			public void handleEvent(Event event) {
+				application().mediaPlayerComponent().getMediaPlayer().skip(-10000);
+			}
+		};
 	}
 
 	public Shell getShell() {
