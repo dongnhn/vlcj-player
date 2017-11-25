@@ -175,6 +175,27 @@ public class MainShell {
 				application().mediaPlayerComponent().getMediaPlayer().nextChapter();
 			}
 		};
+		
+		new MenuItem(playbackMenu, SWT.SEPARATOR);
+		
+		new StandardMenuItem(playbackMenu, "menu.playback.item.play") {
+			@Override
+			public void handleEvent(Event event) {
+				MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
+				if (!mediaPlayer.isPlaying()) {
+					mediaPlayer.play();
+				} else {
+					mediaPlayer.pause();
+				}
+			}
+		};
+		
+		new StandardMenuItem(playbackMenu, "menu.playback.item.stop") {
+			@Override
+			public void handleEvent(Event event) {
+				application().mediaPlayerComponent().getMediaPlayer().stop();
+			}
+		};
 	}
 
 	public Shell getShell() {
