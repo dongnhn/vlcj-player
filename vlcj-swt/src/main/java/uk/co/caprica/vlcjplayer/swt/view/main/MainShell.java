@@ -4,6 +4,7 @@ import static uk.co.caprica.vlcjplayer.Application.application;
 import static uk.co.caprica.vlcjplayer.swt.SwtResource.resource;
 
 import java.awt.Frame;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
+import uk.co.caprica.vlcjplayer.event.SnapshotImageEvent;
 import uk.co.caprica.vlcjplayer.swt.view.StandardMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.AudioDeviceMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.AudioTrackMenuItem;
@@ -51,6 +53,7 @@ public class MainShell {
 		
 		videoContentComposite = new VideoContentComposite(shell);
 		videoContentComposite.setLayoutData("grow, wrap");
+		videoContentComposite.showDefault();
 		
 		Composite bottomComposite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
 		bottomComposite.setLayoutData("grow, wrap, h pref+30px::");
@@ -260,6 +263,19 @@ public class MainShell {
 		videoItem.setMenu(videoMenu);
 		
 		new VideoTrackMenuItem(videoMenu);
+		
+		new MenuItem(videoMenu, SWT.SEPARATOR);
+		
+		new StandardMenuItem(videoMenu, "menu.video.item.snapshot") {
+			@Override
+			public void handleEvent(Event event) {
+				MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
+				BufferedImage image = mediaPlayer.getSnapshot();
+		        if (image != null) {
+		            application().post(new SnapshotImageEvent(image));
+		        }
+			}
+		};
 	}
 
 	public Shell getShell() {
