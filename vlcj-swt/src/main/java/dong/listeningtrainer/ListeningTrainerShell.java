@@ -11,6 +11,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -60,11 +61,14 @@ public class ListeningTrainerShell
 	private ListeningTrainer trainer;
 
 	public ListeningTrainerShell(Shell parent, String file) {
-		this.shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.NO_FOCUS);
+		this.shell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM);
 		shell.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		shell.setLayout(new MigLayout("insets 10", "[shrink, left][grow, right][shrink, right]", "[shrink][shrink][grow][shrink]"));
 		addViews(shell);
 		shell.pack();
+		Rectangle parentBounds = parent.getBounds();
+		Rectangle bounds = shell.getBounds();
+		shell.setLocation(parentBounds.x + (parentBounds.width - bounds.width) / 2, parentBounds.y + (parentBounds.height - bounds.height) / 2);
 
 		// prevent ESC
 		shell.addListener(SWT.Traverse, new Listener() {
