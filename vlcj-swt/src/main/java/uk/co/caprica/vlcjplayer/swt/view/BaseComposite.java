@@ -1,5 +1,7 @@
 package uk.co.caprica.vlcjplayer.swt.view;
 
+import static uk.co.caprica.vlcjplayer.Application.application;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -8,8 +10,6 @@ import org.eclipse.swt.widgets.Listener;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
-
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
 
 public class BaseComposite extends Composite implements MediaPlayerEventListener {
 	public BaseComposite(Composite parent, int style) {

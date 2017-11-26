@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcjplayer.swt.view.OptionListMenuItem;
 
+import static uk.co.caprica.vlcjplayer.Application.application;
 import static uk.co.caprica.vlcjplayer.swt.SwtResource.resource;
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
 
 public class SpeedMenuItem extends OptionListMenuItem<Float> {
 

@@ -1,6 +1,8 @@
 package uk.co.caprica.vlcjplayer.swt;
 
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
+import static uk.co.caprica.vlcjplayer.Application.application;
+
+import javax.swing.UIManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -9,6 +11,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 import uk.co.caprica.vlcjplayer.swt.component.SwtMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.swt.view.main.MainShell;
@@ -20,9 +23,26 @@ public class VlcjSwtPlayer {
 	public static void main(String[] args) {
 		// This will locate LibVLC for the vast majority of cases
 		new NativeDiscovery().discover();
-
-		new VlcjSwtPlayer().start();
+		VlcjSwtPlayer player = new VlcjSwtPlayer();
+		setLookAndFeel();
+		player.start();
 	}
+	
+	private static void setLookAndFeel() {
+        String lookAndFeelClassName;
+        if (RuntimeUtil.isNix()) {
+            lookAndFeelClassName = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+        }
+        else {
+            lookAndFeelClassName = UIManager.getSystemLookAndFeelClassName();
+        }
+        try {
+            UIManager.setLookAndFeel(lookAndFeelClassName);
+        }
+        catch(Exception e) {
+            // Silently fail, it doesn't matter
+        }
+    }
 	
 	public VlcjSwtPlayer() {
 		Display.setAppName("VLCJ");

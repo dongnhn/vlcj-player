@@ -17,30 +17,32 @@
  * Copyright 2015 Caprica Software Limited.
  */
 
-package uk.co.caprica.vlcjplayer.swt;
+package uk.co.caprica.vlcjplayer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import uk.co.caprica.vlcjplayer.BaseApplication;
 import uk.co.caprica.vlcjplayer.swt.component.SwtMediaPlayerComponent;
+import uk.co.caprica.vlcjplayer.view.action.mediaplayer.MediaPlayerActions;
 
 /**
  * Global application state.
  */
-public final class SwtApplication extends BaseApplication<Composite> {
+public final class Application extends BaseApplication<Composite> {
 
     private SwtMediaPlayerComponent mediaPlayerComponent;
+	private MediaPlayerActions mediaPlayerActions;
 
     private static final class ApplicationHolder {
-        private static final SwtApplication INSTANCE = new SwtApplication();
+        private static final Application INSTANCE = new Application();
     }
 
-    public static SwtApplication application() {
+    public static Application application() {
         return ApplicationHolder.INSTANCE;
     }
 
-    private SwtApplication() {
+    private Application() {
     	super();
     	mediaPlayerComponent = new SwtMediaPlayerComponent();
     }
@@ -58,5 +60,12 @@ public final class SwtApplication extends BaseApplication<Composite> {
     @Override
     public SwtMediaPlayerComponent mediaPlayerComponent() {
         return mediaPlayerComponent;
+    }
+    
+    public MediaPlayerActions mediaPlayerActions() {
+    	if (mediaPlayerActions == null) {
+    		mediaPlayerActions = new MediaPlayerActions(mediaPlayerComponent.getMediaPlayer());
+    	}
+        return mediaPlayerActions;
     }
 }

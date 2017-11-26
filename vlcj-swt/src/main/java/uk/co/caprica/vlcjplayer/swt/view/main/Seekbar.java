@@ -19,7 +19,7 @@
 
 package uk.co.caprica.vlcjplayer.swt.view.main;
 
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
+import static uk.co.caprica.vlcjplayer.Application.application;
 import static uk.co.caprica.vlcjplayer.time.Time.formatTime;
 
 import java.util.concurrent.atomic.AtomicBoolean;

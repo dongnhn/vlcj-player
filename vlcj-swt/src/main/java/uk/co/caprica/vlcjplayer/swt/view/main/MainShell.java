@@ -1,6 +1,6 @@
 package uk.co.caprica.vlcjplayer.swt.view.main;
 
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
+import static uk.co.caprica.vlcjplayer.Application.application;
 import static uk.co.caprica.vlcjplayer.swt.SwtResource.resource;
 
 import java.util.Arrays;

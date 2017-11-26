@@ -1,6 +1,6 @@
 package uk.co.caprica.vlcjplayer.swt.view.main.menu;
 
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
+import static uk.co.caprica.vlcjplayer.Application.application;
 
 import java.util.List;
 

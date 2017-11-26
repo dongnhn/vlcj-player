@@ -1,5 +1,7 @@
 package uk.co.caprica.vlcjplayer.swt.view.main.menu;
 
+import static uk.co.caprica.vlcjplayer.Application.application;
+
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -7,8 +9,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import static uk.co.caprica.vlcjplayer.swt.SwtApplication.application;
 
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcjplayer.swt.view.OptionListMenuItem;
