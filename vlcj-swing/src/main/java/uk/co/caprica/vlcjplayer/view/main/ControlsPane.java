@@ -154,9 +154,11 @@ public final class ControlsPane extends BasePanel {
 			@Override
 			public void run() {
 				MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
-				playPauseButton.setIcon(mediaPlayer.isPlaying() ? pauseIcon : playIcon);
-				muteButton.setIcon(mediaPlayer.isMute() ? volumeMutedIcon : volumeHighIcon);
-				volumeSlider.setValue(mediaPlayer.getVolume());
+				if (mediaPlayer != null) {
+					playPauseButton.setIcon(mediaPlayer.isPlaying() ? pauseIcon : playIcon);
+					muteButton.setIcon(mediaPlayer.isMute() ? volumeMutedIcon : volumeHighIcon);
+					volumeSlider.setValue(mediaPlayer.getVolume());
+				}
 			}
 		});
     }
