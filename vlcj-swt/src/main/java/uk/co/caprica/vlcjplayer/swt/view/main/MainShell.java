@@ -45,9 +45,13 @@ public class MainShell {
 	private Shell shell;
 	private VideoContentComposite videoContentComposite;
 	private PositionPane seekbar;
+	private FileDialog fileDialog;
 
 	public MainShell(Display display) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
+		
+		fileDialog = new FileDialog(shell, SWT.OPEN);
+		
 		shell.setMenuBar(createMenuBar(shell));
 		
 		shell.setLayout(new net.miginfocom.swt.MigLayout("fill, insets 0", "[grow]", "[grow]0[]0[]"));
@@ -133,7 +137,6 @@ public class MainShell {
 		new StandardMenuItem(mediaMenu, "menu.media.item.openFile", SWT.CONTROL + 'O') {
 			@Override
 			public void handleEvent(Event event) {
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 				String file = fileDialog.open();
 				if (file != null) {
 					application().addRecentMedia(file);
@@ -284,10 +287,20 @@ public class MainShell {
 	private void createSubtitleMenu(Shell shell, Menu menuBar) {
 		MenuItem subtitleItem = new MenuItem(menuBar, SWT.CASCADE);
 		subtitleItem.setText(resource("menu.subtitle").name());
-		final Menu subtiteMenu = new Menu(subtitleItem);
-		subtitleItem.setMenu(subtiteMenu);
+		final Menu subtitleMenu = new Menu(subtitleItem);
+		subtitleItem.setMenu(subtitleMenu);
 		
-		new SubtitleTrackMenuItem(subtiteMenu);
+		new StandardMenuItem(subtitleMenu, "menu.subtitle.item.addSubtitleFile") {
+			@Override
+			public void handleEvent(Event event) {
+				String file = fileDialog.open();
+				if (file != null) {
+					application().mediaPlayerComponent().getMediaPlayer().setSubTitleFile(file);
+				}
+			}
+		};
+		
+		new SubtitleTrackMenuItem(subtitleMenu);
 	}
 
 	public Shell getShell() {
