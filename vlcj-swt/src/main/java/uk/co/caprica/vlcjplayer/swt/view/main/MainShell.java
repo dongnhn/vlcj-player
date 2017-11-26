@@ -27,6 +27,9 @@ import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcjplayer.event.ShowDebugEvent;
+import uk.co.caprica.vlcjplayer.event.ShowEffectsEvent;
+import uk.co.caprica.vlcjplayer.event.ShowMessagesEvent;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 import uk.co.caprica.vlcjplayer.event.SnapshotImageEvent;
 import uk.co.caprica.vlcjplayer.swt.view.StandardMenuItem;
@@ -124,6 +127,8 @@ public class MainShell {
 		createVideoMenu(shell, menuBar);
 		
 		createSubtitleMenu(shell, menuBar);
+		
+		createToolsMenu(shell, menuBar);
 		
 		return menuBar;
 	}
@@ -301,6 +306,36 @@ public class MainShell {
 		};
 		
 		new SubtitleTrackMenuItem(subtitleMenu);
+	}
+
+	private void createToolsMenu(Shell shell, Menu menuBar) {
+		MenuItem toolsItem = new MenuItem(menuBar, SWT.CASCADE);
+		toolsItem.setText(resource("menu.tools").name());
+		final Menu toolsMenu = new Menu(toolsItem);
+		toolsItem.setMenu(toolsMenu);
+		
+		new StandardMenuItem(toolsMenu, "menu.tools.item.effects", SWT.CONTROL + 'E') {
+			@Override
+			public void handleEvent(Event event) {
+				application().post(ShowEffectsEvent.INSTANCE);
+			}
+		};
+		
+		new StandardMenuItem(toolsMenu, "menu.tools.item.messages", SWT.CONTROL + 'M') {
+			@Override
+			public void handleEvent(Event event) {
+				application().post(ShowMessagesEvent.INSTANCE);
+			}
+		};
+		
+		new MenuItem(toolsMenu, SWT.SEPARATOR);
+		
+		new StandardMenuItem(toolsMenu, "menu.tools.item.debug", (SWT.CONTROL | SWT.SHIFT) + 'D') {
+			@Override
+			public void handleEvent(Event event) {
+				application().post(ShowDebugEvent.INSTANCE);
+			}
+		};
 	}
 
 	public Shell getShell() {
