@@ -28,6 +28,8 @@ import javax.swing.Timer;
 import com.google.android.exoplayer.text.Subtitle;
 
 import dong.listeningtrainer.ParseSubtitleThread.SubtitleParseListener;
+import dong.listeningtrainer.model.ListeningTrainer;
+import dong.listeningtrainer.model.ListeningTrainer.Listener;
 import dong.listeningtrainer.model.ListeningTrainerTimedText;
 import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -37,7 +39,7 @@ import uk.co.caprica.vlcjplayer.view.action.Resource;
 import uk.co.caprica.vlcjplayer.view.action.StandardAction;
 import uk.co.caprica.vlcjplayer.view.action.mediaplayer.PlayAction;
 
-public class ListeningTrainerDialog extends JDialog implements SubtitleParseListener, KeyListener {
+public class ListeningTrainerDialog extends JDialog implements SubtitleParseListener, KeyListener, Listener {
 	
 	private static final int ANIMATION_DURATION = 500; //milliseconds
 	
@@ -57,12 +59,9 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 
 	private int savedSubtitleTrackId = -1;
 
-	private List<ListeningTrainerTimedText> listTimedText;
-	
-	private ListeningTrainerTimedText currentTimedText;
-	private int currentIndex;
-	
 	private Timer changeTextColorAnimator;
+
+	private ListeningTrainer trainer;
 
 	public ListeningTrainerDialog(Window window, File file) {
 		super(window, "Listening Trainer", ModalityType.APPLICATION_MODAL);
@@ -70,7 +69,7 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		
 		mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
 		
-		setLayout(new MigLayout("insets 10", "[shrink, left][grow, right][shrink, right]"));
+		setLayout(new MigLayout("insets 10", "[shrink, left][grow, right][shrink, right]", "[shrink][shrink][grow][shrink]"));
 		getContentPane().setBackground(Color.WHITE);
 		addComponents();
 		pack();
@@ -95,6 +94,9 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
 		}
+		
+		trainer = new ListeningTrainer();
+		trainer.setListener(this);
 		
 		new ParseSubtitleThread(file, this).run();
 	}
@@ -122,7 +124,7 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		repeatButton.setAction(new StandardAction(Resource.resource("dialog.trainer.item.repeat")) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				seekToCurrentTextTime(true);
+				seekTo(trainer.getCurrentText(), true);
 			}
 		});
 		
@@ -143,9 +145,7 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		prevButton.setAction(new StandardAction(Resource.resource("dialog.trainer.item.prev")) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (currentIndex > 0) {
-					updateCurrentIndex(currentIndex - 1);
-				}
+				trainer.previous();
 			}
 		});
 		nextButton = new JButton();
@@ -153,9 +153,7 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		nextButton.setAction(new StandardAction(Resource.resource("dialog.trainer.item.next")) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (currentIndex + 1 < listTimedText.size()) {
-					updateCurrentIndex(currentIndex + 1);
-				}
+				trainer.next();
 			}
 		});
 		
@@ -166,7 +164,7 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		controlsPanel.add(playPauseButton);
 		add(controlsPanel, "span 2, shrink, align right, wrap");
 		add(ratingView, "shrink, span, wrap, align right");
-		add(contentArea, "span, grow, width 350::, height 75::");
+		add(contentArea, "span, grow, width 350::700, height 75::");
 		add(prevButton, "span 2, align right");
 		add(nextButton);
 	}
@@ -189,19 +187,22 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		
 		@Override
 		public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-			if (currentTimedText != null) {
-				if (newTime >= currentTimedText.getEndTime()) {
-					seekToCurrentTextTime(false);
+			ListeningTrainerTimedText text = trainer.getCurrentText();
+			if (text != null) {
+				if (newTime >= text.getEndTime()) {
+					seekTo(text, false);
 				}
 			}
 		}
 	};
 
-	private void seekToCurrentTextTime(boolean autoPlay) {
-		mediaPlayer.setPosition(currentTimedText.getStartTime() * 1.0f / mediaPlayer.getLength());
-		if (autoPlay) {
-			if (!mediaPlayer.isPlaying()) {
-				mediaPlayer.play();
+	private void seekTo(ListeningTrainerTimedText text, boolean autoPlay) {
+		if (text != null) {
+			mediaPlayer.setPosition(text.getStartTime() * 1.0f / mediaPlayer.getLength());
+			if (autoPlay) {
+				if (!mediaPlayer.isPlaying()) {
+					mediaPlayer.play();
+				}
 			}
 		}
 	}
@@ -235,42 +236,10 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		super.dispose();
 	}
 	
-	private void updateCurrentIndex(int currentIndex) {
-		this.currentIndex = currentIndex;
-		this.currentTimedText = listTimedText.get(currentIndex);
-		
-		indexLabel.setText(String.format("#%s/%s", currentIndex + 1, listTimedText.size()));
-		contentArea.setText(currentTimedText.getDisplayText());
-		prevButton.setEnabled(currentIndex > 0);
-		nextButton.setEnabled(currentIndex + 1 < listTimedText.size());
-		updateCompleteStatus();
-		pack();
-		
-		seekToCurrentTextTime(true);
-	}
-
-	private void updateCompleteStatus() {
-		if (currentTimedText.isCompleted()) {
-			ratingView.setVisible(true);
-			ratingView.setRating(currentTimedText.getScorePercent());
-		} else {
-			ratingView.setVisible(false);
-		}
-	}
-	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		char c = e.getKeyChar();
-		if (!currentTimedText.isCompleted() && c != KeyEvent.CHAR_UNDEFINED && Character.isLetterOrDigit(c)) {
-			if (currentTimedText.inputChar(c)) {
-				contentArea.setForeground(Color.BLACK);
-				contentArea.setText(currentTimedText.getDisplayText());
-				updateCompleteStatus();
-			} else {
-				contentArea.setForeground(Color.RED);
-				changeTextColorAnimator.start();
-			}
-		}
+		trainer.enter(c);
 	}
 
 	@Override
@@ -318,26 +287,40 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					onSubtitleReceived(subtitle);
+					long start = (long) (mediaPlayer.getLength() * mediaPlayer.getPosition());
+					long end = (mediaPlayer.getLength() - ListeningTrainerTimedText.TIME_MARGIN);
+					trainer.startTraining(subtitle, start, end);
 				}
 			});
 		}
 	}
 	
+	@Override
+	public void onTextChanged(ListeningTrainerTimedText newText, String description, boolean hasNext, boolean hasPrevious) {
+		indexLabel.setText(description);
+		prevButton.setEnabled(hasPrevious);
+		nextButton.setEnabled(hasNext);
 
-	private void onSubtitleReceived(Subtitle subtitle) {
-		listTimedText = ListeningTrainerTimedText.convert(subtitle, mediaPlayer.getLength() - ListeningTrainerTimedText.TIME_MARGIN);
+		onDisplayTextChanged(newText);
 		
-		if (listTimedText != null && !listTimedText.isEmpty()) {
-			long position = (long) (mediaPlayer.getLength() * mediaPlayer.getPosition());
-			int currentIndex = 0;
-			for (int i = 0, len = listTimedText.size(); i < len; i++) {
-				if (listTimedText.get(i).getEndTime() >= position) {
-					currentIndex = i;
-					break;
-				}
-			}
-			updateCurrentIndex(currentIndex);
+		seekTo(newText, true);
+	}
+
+	@Override
+	public void onDisplayTextChanged(ListeningTrainerTimedText text) {
+		contentArea.setForeground(Color.BLACK);
+		contentArea.setText(text.getDisplayText());
+		if (text.isCompleted()) {
+			ratingView.setVisible(true);
+			ratingView.setRating(text.getScorePercent());
+		} else {
+			ratingView.setVisible(false);
 		}
+	}
+
+	@Override
+	public void onWrongCharacterEntered() {
+		contentArea.setForeground(Color.RED);
+		changeTextColorAnimator.start();
 	}
 }

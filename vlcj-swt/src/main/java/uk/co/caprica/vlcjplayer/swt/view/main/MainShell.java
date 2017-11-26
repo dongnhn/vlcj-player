@@ -29,7 +29,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.eventbus.Subscribe;
 
+import dong.listeningtrainer.ListeningTrainerShell;
 import net.miginfocom.swing.MigLayout;
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcjplayer.event.ShowDebugEvent;
@@ -57,6 +59,8 @@ public class MainShell {
 	
 	private Point location;
 	private Point size;
+	
+	private MenuItem listeningTrainerMenuItem;
 
 	public MainShell(Display display) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
@@ -118,16 +122,19 @@ public class MainShell {
 			@Override
 			public void stopped(MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
+				setListeningToolsEnable(false);
 			}
 			
 			@Override
 			public void finished(MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
+				setListeningToolsEnable(false);
 			}
 			
 			@Override
 			public void error(final MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
+				setListeningToolsEnable(false);
 
 				getShell().getDisplay().asyncExec(new Runnable() {
 					@Override
@@ -143,6 +150,20 @@ public class MainShell {
 			@Override
 			public void mediaDurationChanged(MediaPlayer mediaPlayer, long newDuration) {
 				seekbar.setDuration(newDuration);
+			}
+			
+			@Override
+			public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+				setListeningToolsEnable(true);
+			}
+		});
+	}
+	
+	private void setListeningToolsEnable(final boolean enable) {
+		shell.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				listeningTrainerMenuItem.setEnabled(enable);
 			}
 		});
 	}
@@ -359,6 +380,19 @@ public class MainShell {
 				application().post(ShowMessagesEvent.INSTANCE);
 			}
 		};
+		
+		listeningTrainerMenuItem = new StandardMenuItem(toolsMenu, "menu.tools.item.trainer", SWT.CONTROL + 'T') {
+			@Override
+			public void handleEvent(Event event) {
+				String file = fileDialog.open();
+				if (file != null) {
+					new ListeningTrainerShell(getShell(), file)
+					.getShell()
+					.open();
+				}
+			}
+		}.item();
+		setListeningToolsEnable(false);
 		
 		new MenuItem(toolsMenu, SWT.SEPARATOR);
 		

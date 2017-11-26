@@ -54,4 +54,13 @@ public final class SwtResource {
 			return null;
 		}
 	}
+	
+	public Image buttonIcon() {
+		String key = id + ".buttonIcon";
+		if (resources().containsKey(key)) {
+			return new Image(Display.getDefault(), getClass().getResourceAsStream("/icons/buttons/" + resources().getString(key) + ".png"));
+		} else {
+			return null;
+		}
+	}
 }
