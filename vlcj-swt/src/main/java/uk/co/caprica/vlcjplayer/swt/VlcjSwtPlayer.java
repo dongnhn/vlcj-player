@@ -49,14 +49,19 @@ public class VlcjSwtPlayer {
 		display = Display.getDefault();
 		mainShell = new MainShell(display).getShell();
 		
-		Listener closeListener = new Listener() {
+		mainShell.addListener(SWT.Close, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				application().post(ShutdownEvent.INSTANCE);
 			}
-		};
-		mainShell.addListener(SWT.Close, closeListener);
-		display.addListener(SWT.Close, closeListener);
+		});
+		display.addListener(SWT.Close, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				application().post(ShutdownEvent.INSTANCE);
+				mainShell.dispose();
+			}
+		});
 		display.addListener(SWT.Dispose, new Listener() {
 			@Override
 			public void handleEvent(Event event) {

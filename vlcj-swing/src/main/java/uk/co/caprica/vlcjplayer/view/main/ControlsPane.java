@@ -33,18 +33,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.google.common.eventbus.Subscribe;
+
 import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
-import uk.co.caprica.vlcjplayer.event.PausedEvent;
-import uk.co.caprica.vlcjplayer.event.PlayingEvent;
+import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcjplayer.event.ShowEffectsEvent;
-import uk.co.caprica.vlcjplayer.event.StoppedEvent;
+import uk.co.caprica.vlcjplayer.event.TickEvent;
 import uk.co.caprica.vlcjplayer.view.BasePanel;
 import uk.co.caprica.vlcjplayer.view.action.mediaplayer.MediaPlayerActions;
 
-import com.google.common.eventbus.Subscribe;
-
-final class ControlsPane extends BasePanel {
+public final class ControlsPane extends BasePanel {
 
     private final Icon playIcon = newIcon("play");
 
@@ -82,7 +81,7 @@ final class ControlsPane extends BasePanel {
 
     private final JSlider volumeSlider;
 
-    ControlsPane(MediaPlayerActions mediaPlayerActions) {
+    public ControlsPane(MediaPlayerActions mediaPlayerActions) {
         playPauseButton = new BigButton();
         playPauseButton.setAction(mediaPlayerActions.playbackPlayAction());
         previousButton = new StandardButton();
@@ -150,31 +149,14 @@ final class ControlsPane extends BasePanel {
     }
 
     @Subscribe
-    public void onPlaying(PlayingEvent event) {
+    public void onTick(TickEvent event) {
     	SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				playPauseButton.setIcon(pauseIcon);
-			}
-		});
-    }
-
-    @Subscribe
-    public void onPaused(PausedEvent event) {
-    	SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				playPauseButton.setIcon(playIcon);
-			}
-		});
-    }
-
-    @Subscribe
-    public void onStopped(StoppedEvent event) {
-    	SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				playPauseButton.setIcon(playIcon);
+				MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
+				playPauseButton.setIcon(mediaPlayer.isPlaying() ? pauseIcon : playIcon);
+				muteButton.setIcon(mediaPlayer.isMute() ? volumeMutedIcon : volumeHighIcon);
+				volumeSlider.setValue(mediaPlayer.getVolume());
 			}
 		});
     }

@@ -3,14 +3,16 @@ package uk.co.caprica.vlcjplayer.swt.view.main;
 import static uk.co.caprica.vlcjplayer.Application.application;
 import static uk.co.caprica.vlcjplayer.swt.SwtResource.resource;
 
+import java.awt.Frame;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
 
+import javax.swing.BorderFactory;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -21,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.eventbus.Subscribe;
 
-import net.miginfocom.swt.MigLayout;
+import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
@@ -32,34 +34,39 @@ import uk.co.caprica.vlcjplayer.swt.view.main.menu.ChapterMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.RecentMediaMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.SpeedMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.TitleTrackMenuItem;
+import uk.co.caprica.vlcjplayer.view.main.ControlsPane;
+import uk.co.caprica.vlcjplayer.view.main.PositionPane;
 
 public class MainShell {
 	private Shell shell;
 	private VideoContentComposite videoContentComposite;
+	private PositionPane seekbar;
 
 	public MainShell(Display display) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setMenuBar(createMenuBar(shell));
 		
-		GridLayout layout = new GridLayout(1, true);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		shell.setLayout(layout);
+		shell.setLayout(new net.miginfocom.swt.MigLayout("fill, insets 0", "[grow]", "[grow]0[]0[]"));
 		
 		videoContentComposite = new VideoContentComposite(shell);
-		videoContentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		videoContentComposite.showDefault();
+		videoContentComposite.setLayoutData("grow, wrap");
 		
-		Composite bottomPane = new Composite(shell, SWT.NONE);
-		bottomPane.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
+		Composite bottomComposite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
+		bottomComposite.setLayoutData("grow, wrap, h pref+30px::");
 		
-		bottomPane.setLayout(new MigLayout("fill, insets 0 n n n", "[grow]", "[]0[]"));
+		Frame bottomFrame = SWT_AWT.new_Frame(bottomComposite);
+		bottomFrame.setLayout(new MigLayout("fill, insets 0", "[grow]", "[]0[]"));
+
+		MediaPlayer mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
+		seekbar = new PositionPane(mediaPlayer);
+		seekbar.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
+		bottomFrame.add(seekbar, "grow, wrap");
+
+		ControlsPane playbackControls = new ControlsPane(application().mediaPlayerActions());
+		playbackControls.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
+		bottomFrame.add(playbackControls, "grow");
 		
-		Seekbar seekbar = new Seekbar(bottomPane);
-		seekbar.setLayoutData("grow, wrap");
-		
-		ControlButtonsComposite controlButtonsComposite = new ControlButtonsComposite(bottomPane);
-		controlButtonsComposite.setLayoutData("grow");
+		shell.setMinimumSize(370, 240);
 		
 		handlePlayerEvents();
         application().subscribe(this);
@@ -87,6 +94,11 @@ public class MainShell {
 			public void error(MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
                 // TODO: show error
+			}
+			
+			@Override
+			public void mediaDurationChanged(MediaPlayer mediaPlayer, long newDuration) {
+				seekbar.setDuration(newDuration);
 			}
 		});
 	}

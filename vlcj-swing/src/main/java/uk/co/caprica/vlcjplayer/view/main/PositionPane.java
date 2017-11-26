@@ -39,7 +39,7 @@ import uk.co.caprica.vlcjplayer.view.StandardLabel;
 
 import com.google.common.eventbus.Subscribe;
 
-final class PositionPane extends JPanel {
+public final class PositionPane extends JPanel {
 
     private final JLabel timeLabel;
 
@@ -47,15 +47,13 @@ final class PositionPane extends JPanel {
 
     private final JLabel durationLabel;
 
-    private long time;
-
     private final MediaPlayer mediaPlayer;
 
     private final AtomicBoolean sliderChanging = new AtomicBoolean();
 
     private final AtomicBoolean positionChanging = new AtomicBoolean();
 
-    PositionPane(final MediaPlayer mediaPlayer) {
+    public PositionPane(final MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
 
         timeLabel = new StandardLabel("9:99:99");
@@ -95,9 +93,9 @@ final class PositionPane extends JPanel {
 
         application().subscribe(this);
     }
-
+    
     private void refresh() {
-        timeLabel.setText(formatTime(time));
+        timeLabel.setText(formatTime(mediaPlayer.getTime()));
 
         if (!sliderChanging.get()) {
             int value = (int) (mediaPlayer.getPosition() * 1000.0f);
@@ -107,12 +105,13 @@ final class PositionPane extends JPanel {
         }
     }
 
-    void setTime(long time) {
-        this.time = time;
-    }
-
-    void setDuration(long duration) {
-        durationLabel.setText(formatTime(duration));
+    public void setDuration(final long duration) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				durationLabel.setText(formatTime(duration));
+			}
+		});
     }
 
     @Subscribe

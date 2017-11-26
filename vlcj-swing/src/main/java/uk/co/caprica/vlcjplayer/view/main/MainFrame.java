@@ -480,7 +480,6 @@ public final class MainFrame extends BaseFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        positionPane.setTime(newTime);
                         statusBar.setTime(newTime);
                     }
                 });
