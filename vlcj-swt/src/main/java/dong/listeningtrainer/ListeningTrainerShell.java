@@ -30,6 +30,7 @@ import net.miginfocom.swt.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.TrackDescription;
+import uk.co.caprica.vlcjplayer.swt.SwtResource;
 
 public class ListeningTrainerShell
         implements dong.listeningtrainer.model.ListeningTrainer.Listener, SubtitleParseListener {
@@ -161,7 +162,9 @@ public class ListeningTrainerShell
 
 		repeatButton = new Label(controlsPanel, SWT.PUSH);
 		repeatButton.setLayoutData("growy, w pref+10px::, h pref+10px::");
-		repeatButton.setImage(resource("dialog.trainer.item.repeat").buttonIcon());
+		SwtResource resource = resource("dialog.trainer.item.repeat");
+		repeatButton.setImage(resource.buttonIcon());
+		repeatButton.setToolTipText(resource.tooltip());
 		repeatButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -171,7 +174,9 @@ public class ListeningTrainerShell
 
 		playPauseButton = new Label(controlsPanel, SWT.PUSH);
 		playPauseButton.setLayoutData("w pref+10px::, h pref+10px::");
-		playPauseButton.setImage(resource("dialog.trainer.item.play").buttonIcon());
+		resource = resource("dialog.trainer.item.play");
+		playPauseButton.setImage(resource.buttonIcon());
+		playPauseButton.setToolTipText(resource.tooltip());
 		playPauseButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -188,7 +193,9 @@ public class ListeningTrainerShell
 
 		prevButton = new Button(shell, SWT.PUSH | SWT.NO_FOCUS);
 		prevButton.setLayoutData("span 2, align right");
-		prevButton.setText(resource("dialog.trainer.item.prev").name());
+		resource = resource("dialog.trainer.item.prev");
+		prevButton.setText(resource.name());
+		prevButton.setToolTipText(resource.tooltip());
 		prevButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -197,7 +204,9 @@ public class ListeningTrainerShell
 		});
 
 		nextButton = new Button(shell, SWT.PUSH | SWT.NO_FOCUS);
-		nextButton.setText(resource("dialog.trainer.item.next").name());
+		resource = resource("dialog.trainer.item.next");
+		nextButton.setText(resource.name());
+		nextButton.setToolTipText(resource.tooltip());
 		nextButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
