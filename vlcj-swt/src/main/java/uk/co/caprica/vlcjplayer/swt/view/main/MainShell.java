@@ -16,10 +16,12 @@ import javax.swing.BorderFactory;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -52,6 +54,9 @@ public class MainShell {
 	private VideoContentComposite videoContentComposite;
 	private PositionPane seekbar;
 	private FileDialog fileDialog;
+	
+	private Point location;
+	private Point size;
 
 	public MainShell(Display display) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
@@ -82,10 +87,25 @@ public class MainShell {
 		bottomFrame.add(playbackControls, "grow");
 		
 		shell.setMinimumSize(370, 240);
+
+		restorePreferences();
 		
+		Listener boundsChangedListener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				updateBounds();
+			}
+		};
+		shell.addListener(SWT.Move, boundsChangedListener);
+		shell.addListener(SWT.Resize, boundsChangedListener);
+
 		handlePlayerEvents();
         application().subscribe(this);
-        restorePreferences();
+	}
+
+	private void updateBounds() {
+		location = shell.getLocation();
+		size = shell.getSize();
 	}
 
 	private void handlePlayerEvents() {
@@ -377,6 +397,11 @@ public class MainShell {
             recentMedia = "";
         }
         prefs.put("recentMedia", recentMedia);
+        
+        prefs.putInt("x", location.x);
+        prefs.putInt("y", location.y);
+        prefs.putInt("w", size.x);
+        prefs.putInt("h", size.y);
 	}
 	
 	private void restorePreferences() {
@@ -389,5 +414,8 @@ public class MainShell {
                 application().addRecentMedia(mrl);
             }
         }
+        
+        shell.setLocation(prefs.getInt("x", 100), prefs.getInt("y", 100));
+        shell.setSize(prefs.getInt("w", 800), prefs.getInt("h", 600));
     }
 }
