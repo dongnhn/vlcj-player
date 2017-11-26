@@ -34,6 +34,7 @@ import uk.co.caprica.vlcjplayer.swt.view.main.menu.ChapterMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.RecentMediaMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.SpeedMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.TitleTrackMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.VideoTrackMenuItem;
 import uk.co.caprica.vlcjplayer.view.main.ControlsPane;
 import uk.co.caprica.vlcjplayer.view.main.PositionPane;
 
@@ -111,6 +112,8 @@ public class MainShell {
 		createPlaybackMenu(shell, menuBar);
 		
 		createAudioMenu(shell, menuBar);
+		
+		createVideoMenu(shell, menuBar);
 		
 		return menuBar;
 	}
@@ -248,6 +251,15 @@ public class MainShell {
 				application().mediaPlayerComponent().getMediaPlayer().mute();
 			}
 		};
+	}
+
+	private void createVideoMenu(Shell shell, Menu menuBar) {
+		MenuItem videoItem = new MenuItem(menuBar, SWT.CASCADE);
+		videoItem.setText(resource("menu.video").name());
+		final Menu videoMenu = new Menu(videoItem);
+		videoItem.setMenu(videoMenu);
+		
+		new VideoTrackMenuItem(videoMenu);
 	}
 
 	public Shell getShell() {
