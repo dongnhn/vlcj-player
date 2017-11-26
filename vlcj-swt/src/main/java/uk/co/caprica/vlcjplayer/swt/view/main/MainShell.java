@@ -35,6 +35,7 @@ import uk.co.caprica.vlcjplayer.swt.view.main.menu.AudioTrackMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.ChapterMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.RecentMediaMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.SpeedMenuItem;
+import uk.co.caprica.vlcjplayer.swt.view.main.menu.SubtitleTrackMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.TitleTrackMenuItem;
 import uk.co.caprica.vlcjplayer.swt.view.main.menu.VideoTrackMenuItem;
 import uk.co.caprica.vlcjplayer.view.main.ControlsPane;
@@ -117,6 +118,8 @@ public class MainShell {
 		createAudioMenu(shell, menuBar);
 		
 		createVideoMenu(shell, menuBar);
+		
+		createSubtitleMenu(shell, menuBar);
 		
 		return menuBar;
 	}
@@ -276,6 +279,15 @@ public class MainShell {
 		        }
 			}
 		};
+	}
+
+	private void createSubtitleMenu(Shell shell, Menu menuBar) {
+		MenuItem subtitleItem = new MenuItem(menuBar, SWT.CASCADE);
+		subtitleItem.setText(resource("menu.subtitle").name());
+		final Menu subtiteMenu = new Menu(subtitleItem);
+		subtitleItem.setMenu(subtiteMenu);
+		
+		new SubtitleTrackMenuItem(subtiteMenu);
 	}
 
 	public Shell getShell() {
