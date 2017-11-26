@@ -33,7 +33,6 @@ import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.TrackDescription;
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
 import uk.co.caprica.vlcjplayer.view.action.Resource;
 import uk.co.caprica.vlcjplayer.view.action.StandardAction;
 import uk.co.caprica.vlcjplayer.view.action.mediaplayer.PlayAction;
@@ -54,7 +53,6 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 	private JButton prevButton;
 	private JButton nextButton;
 	
-	private AbstractMediaPlayerJComponent mediaPlayerComponent;
 	private MediaPlayer mediaPlayer;
 
 	private int savedSubtitleTrackId = -1;
@@ -70,8 +68,7 @@ public class ListeningTrainerDialog extends JDialog implements SubtitleParseList
 		super(window, "Listening Trainer", ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		mediaPlayerComponent = application().mediaPlayerComponent();
-		mediaPlayer = mediaPlayerComponent.getMediaPlayer();
+		mediaPlayer = application().mediaPlayerComponent().getMediaPlayer();
 		
 		setLayout(new MigLayout("insets 10", "[shrink, left][grow, right][shrink, right]"));
 		getContentPane().setBackground(Color.WHITE);

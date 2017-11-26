@@ -21,14 +21,14 @@ package uk.co.caprica.vlcjplayer.view.main;
 
 import java.awt.Component;
 
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
+import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.view.MouseMovementDetector;
 
 final class VideoMouseMovementDetector extends MouseMovementDetector {
 
-    private final AbstractMediaPlayerJComponent mediaPlayerComponent;
+    private final AbstractMediaPlayerComponent<Component> mediaPlayerComponent;
 
-    VideoMouseMovementDetector(Component component, int timeout, AbstractMediaPlayerJComponent mediaPlayerComponent) {
+    VideoMouseMovementDetector(Component component, int timeout, AbstractMediaPlayerComponent<Component> mediaPlayerComponent) {
         super(component, timeout);
         this.mediaPlayerComponent = mediaPlayerComponent;
     }

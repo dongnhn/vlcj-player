@@ -1,11 +1,9 @@
 package uk.co.caprica.vlcjplayer.component;
 
-import java.awt.Component;
-
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
-public interface AbstractMediaPlayerJComponent {
+public interface AbstractMediaPlayerComponent<T> {
 
 	MediaPlayer getMediaPlayer();
 
@@ -15,9 +13,9 @@ public interface AbstractMediaPlayerJComponent {
 
 	void toggleFullScreen();
 
-	Component getContentComponent();
+	T getContentComponent();
 
-	Component getVideoSurface();
+	T getVideoSurface();
 
 	void setCursorEnabled(boolean enabled);
 }

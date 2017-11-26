@@ -28,7 +28,7 @@ import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.player.direct.RenderCallback;
 import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
 
-public class DirectMediaPlayerJComponent extends Panel implements AbstractMediaPlayerJComponent {
+public class DirectMediaPlayerJComponent extends Panel implements AbstractMediaPlayerComponent<Component> {
 
 	private DirectMediaPlayerComponent mediaComponent;
 	private AutoResizeVideoSurfacePanel videoSurfacePanel;

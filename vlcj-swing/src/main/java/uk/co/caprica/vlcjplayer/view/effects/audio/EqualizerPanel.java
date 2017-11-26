@@ -22,6 +22,7 @@ package uk.co.caprica.vlcjplayer.view.effects.audio;
 import static uk.co.caprica.vlcjplayer.Application.application;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +42,7 @@ import javax.swing.event.ChangeListener;
 import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.Equalizer;
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
+import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.view.BasePanel;
 import uk.co.caprica.vlcjplayer.view.SliderControl;
 import uk.co.caprica.vlcjplayer.view.StandardLabel;
@@ -52,7 +53,7 @@ public class EqualizerPanel extends BasePanel implements ChangeListener, ItemLis
 
     private final String dbFormat = "%.1f dB";
 
-    private final AbstractMediaPlayerJComponent mediaPlayerComponent;
+    private final AbstractMediaPlayerComponent<Component> mediaPlayerComponent;
     private final Equalizer equalizer;
 
     private final SliderControl preampControl;

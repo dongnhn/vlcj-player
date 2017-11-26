@@ -24,6 +24,7 @@ import static uk.co.caprica.vlcjplayer.Application.resources;
 import static uk.co.caprica.vlcjplayer.view.action.Resource.resource;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -59,7 +60,7 @@ import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerJComponent;
+import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.event.AfterExitFullScreenEvent;
 import uk.co.caprica.vlcjplayer.event.BeforeEnterFullScreenEvent;
 import uk.co.caprica.vlcjplayer.event.PausedEvent;
@@ -88,7 +89,7 @@ public final class MainFrame extends BaseFrame {
 
     private static final KeyStroke KEYSTROKE_TOGGLE_FULLSCREEN = KeyStroke.getKeyStroke("F11");
 
-    private final AbstractMediaPlayerJComponent mediaPlayerComponent;
+    private final AbstractMediaPlayerComponent<Component> mediaPlayerComponent;
 
     private final Action mediaOpenAction;
     private final Action mediaQuitAction;
@@ -518,7 +519,6 @@ public final class MainFrame extends BaseFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        positionPane.setTime(newTime);
                         statusBar.setTime(newTime);
                     }
                 });
@@ -634,8 +634,13 @@ public final class MainFrame extends BaseFrame {
     }
 
     @Subscribe
-    public void onSnapshotImage(SnapshotImageEvent event) {
-        new SnapshotView(event.image());
+    public void onSnapshotImage(final SnapshotImageEvent event) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new SnapshotView(event.image());
+			}
+		});
     }
 
     private void registerEscapeBinding() {

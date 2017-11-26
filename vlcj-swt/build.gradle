@@ -1,0 +1,22 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = rootProject.ext.javaVersion
+targetCompatibility = rootProject.ext.javaVersion
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'uk.co.caprica.vlcjplayer.swt.VlcjSwtPlayer'
+	}
+}
+
+repositories {
+     maven { url "http://maven-eclipse.github.io/maven" }
+}
+
+dependencies {
+	compile project(':vlcj-swing')
+	compile 'org.eclipse.swt:org.eclipse.swt.cocoa.macosx.x86_64:4.5.2'
+	compile 'com.miglayout:miglayout-swt:5.0'
+}

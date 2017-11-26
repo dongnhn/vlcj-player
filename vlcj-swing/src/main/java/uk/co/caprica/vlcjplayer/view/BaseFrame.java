@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 
@@ -55,7 +56,12 @@ public abstract class BaseFrame extends JFrame {
 
     @Subscribe
     public final void onShutdown(ShutdownEvent event) {
-        onShutdown();
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				onShutdown();
+			}
+		});
     }
 
     protected final boolean wasShown() {
