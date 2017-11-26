@@ -3,7 +3,6 @@ package dong.listeningtrainer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Map;
 import com.google.android.exoplayer.ParserException;
 import com.google.android.exoplayer.text.Subtitle;
 import com.google.android.exoplayer.text.SubtitleParser;
-import com.google.android.exoplayer.text.mp4webvtt.Mp4WebvttParser;
 import com.google.android.exoplayer.text.ssa.SsaParser;
 import com.google.android.exoplayer.text.subrip.SubripParser;
 import com.google.android.exoplayer.text.ttml.TtmlParser;
@@ -35,9 +33,9 @@ public class ParseSubtitleThread extends Thread {
 		
 		TtmlParser ttmlParser = new TtmlParser();
 		supportedParsers.put("ttml", ttmlParser);
+		supportedParsers.put("dfxp", ttmlParser);
 		supportedParsers.put("xml", ttmlParser);
 		
-		supportedParsers.put("mp4webvtt", new Mp4WebvttParser());
 		supportedParsers.put("tx3g", new Tx3gParser());
 	}
 	
@@ -82,8 +80,6 @@ public class ParseSubtitleThread extends Thread {
 			String ext = Util.toLowerInvariant(Files.getFileExtension(file.getName()));
 			if (supportedParsers.containsKey(ext)) {
 				return Collections.singletonList(supportedParsers.get(ext));
-			} else {
-				return new ArrayList<SubtitleParser>(supportedParsers.values());
 			}
 		}
 		
