@@ -22,6 +22,7 @@ package uk.co.caprica.vlcjplayer.view;
 import static uk.co.caprica.vlcjplayer.Application.application;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import uk.co.caprica.vlcjplayer.event.ShutdownEvent;
 
@@ -35,7 +36,12 @@ public abstract class BasePanel extends JPanel {
 
     @Subscribe
     public final void onShutdown(ShutdownEvent event) {
-        onShutdown();
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				onShutdown();
+			}
+		});
     }
 
     /**

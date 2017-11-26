@@ -42,6 +42,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 
 import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
 import uk.co.caprica.vlcjplayer.event.ShowDebugEvent;
@@ -226,6 +227,11 @@ public final class DebugFrame extends BaseFrame {
 
     @Subscribe
     public void onShowMessages(ShowDebugEvent event) {
-        setVisible(true);
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setVisible(true);
+			}
+		});
     }
 }

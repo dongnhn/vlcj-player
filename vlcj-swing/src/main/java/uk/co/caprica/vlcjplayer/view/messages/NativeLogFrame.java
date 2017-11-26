@@ -220,6 +220,11 @@ public final class NativeLogFrame extends BaseFrame implements LogEventListener 
 
     @Subscribe
     public void onShowMessages(ShowMessagesEvent event) {
-        setVisible(true);
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setVisible(true);
+			}
+		});
     }
 }

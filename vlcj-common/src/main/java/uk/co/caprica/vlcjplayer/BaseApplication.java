@@ -59,7 +59,7 @@ public abstract class BaseApplication<T> {
 		tickService.scheduleWithFixedDelay(new Runnable() {
 			@Override
 			public void run() {
-				post(TickEvent.INSTANCE);
+				eventBus.post(TickEvent.INSTANCE);
 			}
 		}, 0, 1000, TimeUnit.MILLISECONDS);
 	}
@@ -68,7 +68,9 @@ public abstract class BaseApplication<T> {
 		eventBus.register(subscriber);
 	}
 	
-	public abstract void post(final Object event);
+	public void post(final Object event) {
+		eventBus.post(event);
+	}
 
 	public abstract AbstractMediaPlayerComponent<T> mediaPlayerComponent();
 	

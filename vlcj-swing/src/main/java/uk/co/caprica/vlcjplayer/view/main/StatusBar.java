@@ -24,6 +24,7 @@ import static uk.co.caprica.vlcjplayer.time.Time.formatTime;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcjplayer.event.TickEvent;
@@ -85,6 +86,11 @@ final class StatusBar extends JPanel {
 
     @Subscribe
     public void onTick(TickEvent tick) {
-        refresh();
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				refresh();
+			}
+		});
     }
 }

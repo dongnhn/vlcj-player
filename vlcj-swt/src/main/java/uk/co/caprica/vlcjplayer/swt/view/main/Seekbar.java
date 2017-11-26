@@ -133,6 +133,11 @@ final class Seekbar extends BaseComposite {
 
     @Subscribe
     public void onTick(TickEvent tick) {
-        refresh();
+    	getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				refresh();
+			}
+		});
     }
 }

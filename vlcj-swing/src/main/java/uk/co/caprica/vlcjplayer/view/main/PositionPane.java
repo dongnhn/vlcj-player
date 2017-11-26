@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -116,6 +117,11 @@ final class PositionPane extends JPanel {
 
     @Subscribe
     public void onTick(TickEvent tick) {
-        refresh();
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				refresh();
+			}
+		});
     }
 }

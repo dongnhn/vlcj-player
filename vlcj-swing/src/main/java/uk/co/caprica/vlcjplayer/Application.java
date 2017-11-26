@@ -21,8 +21,6 @@ package uk.co.caprica.vlcjplayer;
 
 import java.awt.Component;
 
-import javax.swing.SwingUtilities;
-
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcj.version.Version;
 import uk.co.caprica.vlcjplayer.component.AbstractMediaPlayerComponent;
@@ -62,21 +60,21 @@ public final class Application extends BaseApplication<Component> {
         mediaPlayerActions = new MediaPlayerActions(mediaPlayerComponent.getMediaPlayer());
     }
 
-    @Override
-    public void post(final Object event) {
-        // Events are always posted and processed on the Swing Event Dispatch thread
-        if (SwingUtilities.isEventDispatchThread()) {
-            eventBus.post(event);
-        }
-        else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    eventBus.post(event);
-                }
-            });
-        }
-    }
+//    @Override
+//    public void post(final Object event) {
+//        // Events are always posted and processed on the Swing Event Dispatch thread
+//        if (SwingUtilities.isEventDispatchThread()) {
+//            eventBus.post(event);
+//        }
+//        else {
+//            SwingUtilities.invokeLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    eventBus.post(event);
+//                }
+//            });
+//        }
+//    }
 
     @Override
     public AbstractMediaPlayerComponent<Component> mediaPlayerComponent() {

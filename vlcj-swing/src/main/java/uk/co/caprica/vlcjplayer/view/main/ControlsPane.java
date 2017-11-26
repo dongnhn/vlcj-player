@@ -29,6 +29,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -150,17 +151,32 @@ final class ControlsPane extends BasePanel {
 
     @Subscribe
     public void onPlaying(PlayingEvent event) {
-        playPauseButton.setIcon(pauseIcon); // FIXME best way to do this? should be via the action really?
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				playPauseButton.setIcon(pauseIcon);
+			}
+		});
     }
 
     @Subscribe
     public void onPaused(PausedEvent event) {
-        playPauseButton.setIcon(playIcon); // FIXME best way to do this? should be via the action really?
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				playPauseButton.setIcon(playIcon);
+			}
+		});
     }
 
     @Subscribe
     public void onStopped(StoppedEvent event) {
-        playPauseButton.setIcon(playIcon); // FIXME best way to do this? should be via the action really?
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				playPauseButton.setIcon(playIcon);
+			}
+		});
     }
 
     private class BigButton extends JButton {

@@ -596,8 +596,13 @@ public final class MainFrame extends BaseFrame {
     }
 
     @Subscribe
-    public void onSnapshotImage(SnapshotImageEvent event) {
-        new SnapshotView(event.image());
+    public void onSnapshotImage(final SnapshotImageEvent event) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new SnapshotView(event.image());
+			}
+		});
     }
 
     private void registerEscapeBinding() {

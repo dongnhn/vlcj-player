@@ -27,6 +27,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcjplayer.event.ShowEffectsEvent;
@@ -90,6 +91,11 @@ public class EffectsFrame extends BaseFrame {
 
     @Subscribe
     public void onShowEffects(ShowEffectsEvent event) {
-        setVisible(true);
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setVisible(true);
+			}
+		});
     }
 }
