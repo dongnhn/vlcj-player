@@ -1,10 +1,12 @@
 package uk.co.caprica.vlcjplayer.swt.view.main;
 
 import static uk.co.caprica.vlcjplayer.Application.application;
+import static uk.co.caprica.vlcjplayer.BaseApplication.resources;
 import static uk.co.caprica.vlcjplayer.swt.SwtResource.resource;
 
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.eventbus.Subscribe;
@@ -103,9 +106,18 @@ public class MainShell {
 			}
 			
 			@Override
-			public void error(MediaPlayer mediaPlayer) {
+			public void error(final MediaPlayer mediaPlayer) {
 				videoContentComposite.showDefault();
-                // TODO: show error
+
+				getShell().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR);
+						messageBox.setText(resources().getString("dialog.errorEncountered"));
+						messageBox.setMessage(MessageFormat.format(resources().getString("error.errorEncountered"), mediaPlayer.mrl()));
+						messageBox.open();
+					}
+				});
 			}
 			
 			@Override
